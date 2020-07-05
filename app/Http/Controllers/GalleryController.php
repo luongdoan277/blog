@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Model\Gallery;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 class GalleryController extends Controller
@@ -25,22 +27,35 @@ class GalleryController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Application|Factory|Response|View
      */
     public function create()
     {
-        //
+        return view('gallery.upload');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return Response
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'titleGallery'=>'required',
+            'discGallery'=>'required',
+            'imgFullNameGallery'=>'required',
+            'orderGallery'=>'required',
+        ]);
+        $gallery = Gallery::create([
+            'titleGallery'=>$request->get('titleGallery'),
+            'discGallery'=>$request->get('discGallery'),
+            'imgFullNameGallery'=>$request->get('imgFullNameGallery'),
+            'orderGallery'=>$request->get('orderGallery'),
+        ]);
+        $gallery->save();
+        return redirect('/')->with('success','Gallery save!');
     }
 
     /**
@@ -68,7 +83,7 @@ class GalleryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return Response
      */

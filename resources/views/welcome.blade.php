@@ -5,11 +5,12 @@
     <title>My Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900|Cormorant+Garamond:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
 </head>
 <body>
     <header>
-        <a href="#" class="header-brand">mmtuts</a>
+        <a href="{{route('index')}}" class="header-brand">mmtuts</a>
         <nav>
             <ul>
                 <li><a href="#">Portfolio</a></li>
@@ -22,8 +23,8 @@
     <main>
         @yield('main')
     </main>
-    <div class="wrapper">
-        <footer>
+    <footer>
+        <div class="container">
             <ul class="footer-links-main">
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Cases</a></li>
@@ -49,7 +50,7 @@
                     <img src="img/facebook-logo-button.png" alt="youtube icon">
                 </a>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 </body>
 </html>
