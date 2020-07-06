@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class GalleryController extends Controller
@@ -43,19 +44,56 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titleGallery'=>'required',
-            'discGallery'=>'required',
-            'imgFullNameGallery'=>'required',
-            'orderGallery'=>'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $gallery = Gallery::create([
-            'titleGallery'=>$request->get('titleGallery'),
-            'discGallery'=>$request->get('discGallery'),
-            'imgFullNameGallery'=>$request->get('imgFullNameGallery'),
-            'orderGallery'=>$request->get('orderGallery'),
-        ]);
-        $gallery->save();
-        return redirect('/')->with('success','Gallery save!');
+        $newFileName = $request->get('name');
+        $fileName = $request->image->getClientOriginalName();
+        $fileType = $request->image->getMimeType();
+        $fileTempName = $request->image->getPathName();
+        $fileError = $request->image->getError();
+        $fileSize = $request->image->getSize();
+        $fileExt = explode(".", $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+        $allowed = array("jpg", "jpeg", "png");
+        if (in_array($fileActualExt, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 2000000) {
+                    $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
+                    $sql = Gallery::all();
+                    if (!$sql) {
+                        echo "SQL statement failed!";
+                    } else {
+                        $result = DB::table("gallery")->get();
+                        $rowCount = count($result);
+                        $setImageOrder = $rowCount + 1;
+
+                        $gallery = Gallery::create([
+                            'titleGallery'=>$request->get('titleGallery'),
+                            'descGallery'=>$request->get('descGallery'),
+                            'imgFullNameGallery'=>$imageFullName,
+                            'orderGallery'=>$setImageOrder,
+                        ]);
+                        $gallery->save();
+                        if (!$gallery->save()) {
+                            echo "SQL statement failed!";
+                        } else {
+                            $gallery->save();
+                            $request->image->move('img/gallery', $imageFullName);
+                            return redirect('/');
+                        }
+                    }
+                } else {
+                    echo "File size is too big!";
+                    exit();
+                }
+            } else {
+                echo "You had an error!";
+                exit();
+            }
+        } else {
+            echo "You need to upload a proper file type!";
+            exit();
+        }
     }
 
     /**
