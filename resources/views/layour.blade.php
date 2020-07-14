@@ -41,13 +41,13 @@
         </ul>
         <div class="footer-sm">
             <a href="#">
-                <img src="img/youtube-symbol.png" alt="youtube icon">
+                <img src="{{asset('img/youtube-symbol.png')}}" alt="youtube icon">
             </a>
             <a href="#">
-                <img src="img/twitter-logo-button.png" alt="youtube icon">
+                <img src="{{asset('img/twitter-logo-button.png')}}" alt="youtube icon">
             </a>
             <a href="#">
-                <img src="img/facebook-logo-button.png" alt="youtube icon">
+                <img src="{{asset('img/facebook-logo-button.png')}}" alt="youtube icon">
             </a>
         </div>
     </div>

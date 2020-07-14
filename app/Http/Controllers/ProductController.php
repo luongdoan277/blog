@@ -145,7 +145,7 @@ class ProductController extends Controller
                     } else {
                         $product -> name =$request->get('name');
                         $product -> price =$request->get('price');
-//                        $product -> imgFull = $imageFullName;
+                        $product -> imgFull = $imageFullName;
 
 
                         $product->save();

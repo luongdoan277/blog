@@ -18,10 +18,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="image">Image</label>
-                    <input type="text" class="form-control" name="image" value={{ $product->imgFull }} />
+                    <img src="{{asset('img/gallery/' . $product->imgFull)}}" width="250" height="250" alt="img"/>
+                    <br>
+                    <input type="file" name="image"/>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>
