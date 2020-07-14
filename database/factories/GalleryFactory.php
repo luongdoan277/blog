@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model\Gallery;
+use App\Model\Product;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(Gallery::class, function (Faker $faker) {
+$factory->define(Product::class, function (Faker $faker) {
     return [
         'titleGallery' => $faker->title,
         'descGallery' => $faker->text,

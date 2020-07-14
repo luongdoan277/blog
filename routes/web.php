@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/', 'GalleryController');
+Route::resource('/', 'ProductController');

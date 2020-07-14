@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Gallery;
+use App\Model\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -12,7 +12,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class GalleryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,8 +21,8 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        $Gallery = Gallery::all();
-        return view('gallery.index', compact('Gallery'));
+        $Product = Product::all();
+        return view('gallery.index', compact('Product'));
     }
 
     /**
@@ -32,7 +32,7 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        return view('gallery.upload');
+        return view('product.upload');
     }
 
     /**
@@ -59,25 +59,20 @@ class GalleryController extends Controller
             if ($fileError === 0) {
                 if ($fileSize < 2000000) {
                     $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
-                    $sql = Gallery::all();
+                    $sql = Product::all();
                     if (!$sql) {
                         echo "SQL statement failed!";
                     } else {
-                        $result = DB::table("gallery")->get();
-                        $rowCount = count($result);
-                        $setImageOrder = $rowCount + 1;
-
-                        $gallery = Gallery::create([
-                            'titleGallery'=>$request->get('titleGallery'),
-                            'descGallery'=>$request->get('descGallery'),
+                        $product = Product::create([
+                            'name'=>$request->get('name'),
+                            'price'=>$request->get('price'),
                             'imgFullNameGallery'=>$imageFullName,
-                            'orderGallery'=>$setImageOrder,
                         ]);
-                        $gallery->save();
-                        if (!$gallery->save()) {
+                        $product->save();
+                        if (!$product->save()) {
                             echo "SQL statement failed!";
                         } else {
-                            $gallery->save();
+                            $product->save();
                             $request->image->move('img/gallery', $imageFullName);
                             return redirect('/');
                         }
@@ -100,22 +95,23 @@ class GalleryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return Application|Factory|Response|View
      */
     public function show($id)
     {
-        //
+        return view('product.index', ['product'=>Product::findOrFail($id)]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return Application|Factory|Response|View
      */
     public function edit($id)
     {
-        //
+        $product=Product::find($id);
+        return view('product.edit', compact('product'));
     }
 
     /**
@@ -127,17 +123,66 @@ class GalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $product = Product::find($id);
+        $newFileName = $request->get('name');
+        $fileName = $request->image->getClientOriginalName();
+        $fileType = $request->image->getMimeType();
+        $fileTempName = $request->image->getPathName();
+        $fileError = $request->image->getError();
+        $fileSize = $request->image->getSize();
+        $fileExt = explode(".", $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+        $allowed = array("jpg", "jpeg", "png");
+        if (in_array($fileActualExt, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 2000000) {
+                    $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
+                    $sql = Product::all();
+                    if (!$sql) {
+                        echo "SQL statement failed!";
+                    } else {
+                        $product -> name =$request->get('name');
+                        $product -> price =$request->get('price');
+                        $product -> imgFull = $imageFullName;
+
+
+                        $product->save();
+                        if (!$product->save()) {
+                            echo "SQL statement failed!";
+                        } else {
+                            $product->save();
+                            $request->image->move('img/gallery', $imageFullName);
+                            return redirect('/');
+                        }
+                    }
+                } else {
+                    echo "File size is too big!";
+                    exit();
+                }
+            } else {
+                echo "You had an error!";
+                exit();
+            }
+        } else {
+            echo "You need to upload a proper file type!";
+            exit();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+
+        return redirect('/');
     }
 }

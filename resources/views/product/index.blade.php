@@ -10,11 +10,11 @@
                 </div>
             </div>
             <div class="gallery-container">
-                @foreach($Gallery as $gallery)
+                @foreach($Product as $product)
                     <a href="#">
-                        <div style="background-image: url(img/gallery/{{$gallery->imgFullNameGallery}});"></div>
-                        <h3>{{$gallery->titleGallery}}</h3>
-                        <p>{{$gallery->descGallery}}</p>
+                        <div style="background-image: url(img/gallery/{{$product->imgFull}});"></div>
+                        <h3>{{$product->name}}</h3>
+                        <p>{{$product->price}}</p>
                     </a>
                 @endforeach
             </div>

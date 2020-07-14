@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGalleriesTable extends Migration
+class ProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateGalleriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('gallery', function (Blueprint $table) {
-            $table->bigIncrements('idGallery');
-            $table->longText('titleGallery');
-            $table->longText('descGallery');
-            $table->longText('imgFullNameGallery');
-            $table->Integer('orderGallery');
+        Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->longText('name');
+            $table->decimal('price');
+            $table->longText('imgFull');
             $table->timestamps();
         });
     }
