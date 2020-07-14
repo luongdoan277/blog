@@ -9,7 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -22,7 +21,7 @@ class ProductController extends Controller
     public function index()
     {
         $Product = Product::all();
-        return view('gallery.index', compact('Product'));
+        return view('product.index', compact('Product'));
     }
 
     /**
@@ -66,7 +65,7 @@ class ProductController extends Controller
                         $product = Product::create([
                             'name'=>$request->get('name'),
                             'price'=>$request->get('price'),
-                            'imgFullNameGallery'=>$imageFullName,
+                            'imgFull'=>$imageFullName,
                         ]);
                         $product->save();
                         if (!$product->save()) {
@@ -74,7 +73,7 @@ class ProductController extends Controller
                         } else {
                             $product->save();
                             $request->image->move('img/gallery', $imageFullName);
-                            return redirect('/');
+                            return redirect('/product');
                         }
                     }
                 } else {
@@ -110,7 +109,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product=Product::find($id);
+        $product = Product::find($id);
         return view('product.edit', compact('product'));
     }
 
@@ -119,7 +118,7 @@ class ProductController extends Controller
      *
      * @param Request $request
      * @param  int  $id
-     * @return Response
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function update(Request $request, $id)
     {
@@ -146,7 +145,7 @@ class ProductController extends Controller
                     } else {
                         $product -> name =$request->get('name');
                         $product -> price =$request->get('price');
-                        $product -> imgFull = $imageFullName;
+//                        $product -> imgFull = $imageFullName;
 
 
                         $product->save();
@@ -155,7 +154,7 @@ class ProductController extends Controller
                         } else {
                             $product->save();
                             $request->image->move('img/gallery', $imageFullName);
-                            return redirect('/');
+                            return redirect('/product');
                         }
                     }
                 } else {
@@ -170,6 +169,13 @@ class ProductController extends Controller
             echo "You need to upload a proper file type!";
             exit();
         }
+        return redirect('/product');
+    }
+    public function findName(Request $request)
+    {
+        $search= $request -> get('search');
+        Product::query()->where('name', '=',$search);
+        $result = Product::query()->orderBy('id')->get();
     }
 
     /**
@@ -183,6 +189,6 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->delete();
 
-        return redirect('/');
+        return redirect('/product');
     }
 }

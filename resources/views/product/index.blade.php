@@ -1,23 +1,42 @@
-@extends('welcome')
+@extends('layour')
 
 @section('main')
-    <div class="gallery-links">
-        <div class="wrapper">
-            <div class="row">
-                <div class="col-lg-6"><h2>Gallery</h2></div>
-                <div class="col-lg-6 text-right">
-                    <a href="{{ route('create')}}" class="btn btn-primary">New gallery</a>
-                </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="display-3">Product</h1>
+            <div>
+                <a href="{{ route('product.create')}}" class="btn btn-primary">New product</a>
             </div>
-            <div class="gallery-container">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Image</td>
+                    <td>Name</td>
+                    <td>Price</td>
+                </tr>
+                </thead>
+                <tbody>
                 @foreach($Product as $product)
-                    <a href="#">
-                        <div style="background-image: url(img/gallery/{{$product->imgFull}});"></div>
-                        <h3>{{$product->name}}</h3>
-                        <p>{{$product->price}}</p>
-                    </a>
+                    <tr>
+                        <td>{{$product->id}}</td>
+                        <td><img src="img/gallery/{{$product->imgFull}}" width="250" height="250" alt="img"></td>
+                        <td>{{$product->name}}</td>
+                        <td>{{$product->price}}</td>
+                        <td>
+                            <a href="{{ route('product.edit', $product->id)}}" class="btn btn-primary">Edit</a>
+                        </td>
+                        <td>
+                            <form action="{{ route('product.destroy', $product->id)}}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
                 @endforeach
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
