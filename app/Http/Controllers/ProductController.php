@@ -37,7 +37,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param Request $request`
      * @return Application|RedirectResponse|Redirector
      */
     public function store(Request $request)
@@ -94,11 +94,28 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Application|Factory|Response|View
+     * @return Application|Factory|Response|View|string
      */
     public function show($id)
     {
-        return view('product.index', ['product'=>Product::findOrFail($id)]);
+        $product = Product::findOrFail($id);
+        return 'Name: ' . $product->name
+            . '<br/>Price: ' . $product->price
+            . '<br/>Image: ' . $product->imgFull;
+    }
+
+    public function searchByName(Request $request)
+    {
+        $products = Product::where('name', 'like', '%' . $request->value . '%')->get();
+
+        return response()->json($products);
+    }
+
+    public function searchById(Request $request)
+    {
+        $products = Product::where('id', 'like', '%' . $request->value . '%')->get();
+
+        return response()->json($products);
     }
 
     /**
@@ -131,18 +148,12 @@ class ProductController extends Controller
         $fileExt = explode(".", $fileName);
         $fileActualExt = strtolower(end($fileExt));
         $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
-        $product -> name = $newFileName;
+        $product -> name = $request->get('name');
         $product -> price =$request->get('price');
         $product -> imgFull = $imageFullName;
         $product->save();
         $request->get('image')->move('img/gallery', $imageFullName);
         return redirect('/product');
-    }
-    public function findName(Request $request)
-    {
-        $search= $request -> get('search');
-        Product::query()->where('name', '=',$search);
-        $result = Product::query()->orderBy('id')->get();
     }
 
     /**

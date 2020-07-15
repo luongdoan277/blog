@@ -16,4 +16,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('product', 'ProductController');
+Route::get('/search/name', 'ProductController@searchByName');
 
+Route::get('/search/id', 'ProductController@searchByEmail');

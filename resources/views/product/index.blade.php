@@ -7,6 +7,13 @@
             <div>
                 <a href="{{ route('product.create')}}" class="btn btn-primary">New product</a>
             </div>
+            <div class="flex-center position-ref full-height">
+                <div class="content">
+                    <form class="typeahead" role="search">
+                        <input type="search" name="q" class="form-control search-input" placeholder="Name or Id" autocomplete="off">
+                    </form>
+                </div>
+            </div>
             <table class="table table-striped">
                 <thead>
                 <tr>
