@@ -127,48 +127,15 @@ class ProductController extends Controller
         ]);
         $product = Product::find($id);
         $newFileName = $request->get('name');
-        $fileName = $request->image->getClientOriginalName();
-        $fileType = $request->image->getMimeType();
-        $fileTempName = $request->image->getPathName();
-        $fileError = $request->image->getError();
-        $fileSize = $request->image->getSize();
+        $fileName = $request->get('image')->getClientOriginalName();
         $fileExt = explode(".", $fileName);
         $fileActualExt = strtolower(end($fileExt));
-        $allowed = array("jpg", "jpeg", "png");
-        if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 2000000) {
-                    $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
-                    $sql = Product::all();
-                    if (!$sql) {
-                        echo "SQL statement failed!";
-                    } else {
-                        $product -> name =$request->get('name');
-                        $product -> price =$request->get('price');
-                        $product -> imgFull = $imageFullName;
-
-
-                        $product->save();
-                        if (!$product->save()) {
-                            echo "SQL statement failed!";
-                        } else {
-                            $product->save();
-                            $request->image->move('img/gallery', $imageFullName);
-                            return redirect('/product');
-                        }
-                    }
-                } else {
-                    echo "File size is too big!";
-                    exit();
-                }
-            } else {
-                echo "You had an error!";
-                exit();
-            }
-        } else {
-            echo "You need to upload a proper file type!";
-            exit();
-        }
+        $imageFullName = $newFileName . "." . uniqid("", true) . "." . $fileActualExt;
+        $product -> name = $newFileName;
+        $product -> price =$request->get('price');
+        $product -> imgFull = $imageFullName;
+        $product->save();
+        $request->get('image')->move('img/gallery', $imageFullName);
         return redirect('/product');
     }
     public function findName(Request $request)
